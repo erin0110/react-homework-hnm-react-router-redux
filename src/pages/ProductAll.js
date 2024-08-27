@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCrad/ProductCrad";
+import { productAction } from "../redux/actions/productAction";
 
 const ProductAll = () => {
-  const [productList, setProductList] = useState([]);
+  const productList = useSelector((state) => state.product.productList);
   const [query] = useSearchParams();
-  let searchQuery = query.get("q") || "";
+  const dispatch = useDispatch();
 
-  const getProducts = useCallback(async () => {
-    let url = `https://my-json-server.typicode.com/erin0110/react-homework-hnm-react-router-practice/products?q=${searchQuery}`;
-    let response = await fetch(url);
-    let data = await response.json();
-    setProductList(data);
-  }, [searchQuery]);
+  let searchQuery = query.get("q") || "";
+  const getProducts = () => {
+    dispatch(productAction.getProducts(searchQuery));
+  };
 
   useEffect(() => {
     getProducts();
